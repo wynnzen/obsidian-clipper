@@ -21,11 +21,14 @@ import {
 	PenLine,
 	PictureInPicture2,
 	RotateCw,
+	Save,
 	Settings,
 	Share,
 	SquareCheckBig, 	
 	Tags,
 	Trash2,
+	Eye,
+	EyeOff,
 	X
 } from 'lucide';
 
@@ -54,11 +57,14 @@ export const icons = {
 	PictureInPicture2,
 	PenLine,
 	RotateCw,
+	Save,
 	Settings,
 	Share,
 	SquareCheckBig,
 	Tags,
 	Trash2,
+	Eye,
+	EyeOff,
 	X
 };
 

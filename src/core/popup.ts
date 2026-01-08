@@ -278,6 +278,8 @@ function setupMessageListeners() {
 		} else if (request.action === "highlighterModeChanged") {
 			// This message is now handled by checkHighlighterModeState
 		}
+		// Ensure we always return true to satisfy the expected OnMessageListenerCallback
+		return true;
 	});
 }
 

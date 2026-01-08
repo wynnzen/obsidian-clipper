@@ -3,6 +3,7 @@ import * as highlighter from './utils/highlighter';
 import { loadSettings, generalSettings } from './utils/storage-utils';
 import Defuddle from 'defuddle';
 import { getDomain } from './utils/string-utils';
+import { mountClipboardToolbar } from './clipboard-toolbar';
 
 declare global {
 	interface Window {
@@ -20,6 +21,8 @@ declare global {
 
 	// Mark as initialized
 	window.obsidianHighlighterInitialized = true;
+	
+	mountClipboardToolbar();
 
 	let isHighlighterMode = false;
 	const iframeId = 'obsidian-clipper-iframe';
@@ -189,7 +192,7 @@ declare global {
 			if (existingContainer) {
 				removeContainer(existingContainer);
 			}
-			return;
+			return true;
 		}
 
 		if (request.action === "copy-text-to-clipboard") {
@@ -285,10 +288,12 @@ declare global {
 				wordCount: defuddled.wordCount,
 				metaTags: defuddled.metaTags || []
 			};
-			sendResponse(response);
+				sendResponse(response);
+				return true;
 		} else if (request.action === "extractContent") {
 			const content = extractContentBySelector(request.selector, request.attribute, request.extractHtml);
 			sendResponse({ content: content });
+			return true;
 		} else if (request.action === "paintHighlights") {
 			highlighter.loadHighlights().then(() => {
 				if (generalSettings.alwaysShowHighlights) {
@@ -310,6 +315,7 @@ declare global {
 			highlighter.toggleHighlighterMenu(request.isActive);
 			updateHasHighlights();
 			sendResponse({ success: true });
+			return true;
 		} else if (request.action === "highlightSelection") {
 			highlighter.toggleHighlighterMenu(request.isActive);
 			const selection = window.getSelection();
@@ -318,6 +324,7 @@ declare global {
 			}
 			updateHasHighlights();
 			sendResponse({ success: true });
+			return true;
 		} else if (request.action === "highlightElement") {
 			highlighter.toggleHighlighterMenu(request.isActive);
 			if (request.targetElementInfo) {
@@ -363,10 +370,12 @@ declare global {
 			}
 			updateHasHighlights();
 			sendResponse({ success: true });
+			return true;
 		} else if (request.action === "clearHighlights") {
 			highlighter.clearHighlights();
 			updateHasHighlights();
-			sendResponse({ success: true });
+				sendResponse({ success: true });
+				return true;
 		} else if (request.action === "getHighlighterState") {
 			browser.runtime.sendMessage({ action: "getHighlighterMode" })
 				.then(response => {

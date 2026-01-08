@@ -102,7 +102,7 @@ async function sendMessageToPopup(tabId: number, message: any): Promise<void> {
 
 
 
-browser.runtime.onMessage.addListener((request: unknown, sender: browser.Runtime.MessageSender, sendResponse: (response?: any) => void): true | undefined => {
+browser.runtime.onMessage.addListener((request: unknown, sender: browser.Runtime.MessageSender, sendResponse: (response?: any) => void): true => {
 	if (typeof request === 'object' && request !== null) {
 		const typedRequest = request as { action: string; isActive?: boolean; hasHighlights?: boolean; tabId?: number; text?: string };
 		
@@ -367,7 +367,9 @@ browser.runtime.onMessage.addListener((request: unknown, sender: browser.Runtime
 			return true;
 		}
 	}
-	return undefined;
+	// The runtime expects a boolean true to indicate an asynchronous sendResponse may be called.
+	// Return true here to satisfy the OnMessageListener type signature.
+	return true;
 });
 
 browser.commands.onCommand.addListener(async (command, tab) => {
